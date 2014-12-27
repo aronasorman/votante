@@ -27,6 +27,14 @@ type Block struct {
 	Votes *Votes
 }
 
+func (b *Block) Hash() []byte {
+	var totalshasum bytes.Buffer
+	totalshasum.Write(b.Miner.Hash())
+	totalshasum.Write(b.Votes.Hash())
+
+	return DoubleSha256(totalshasum.Bytes())
+}
+
 type Vote struct {
 	For string
 }
