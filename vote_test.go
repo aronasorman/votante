@@ -42,7 +42,7 @@ func TestVotesHashChangeWhenSingleVoteChanges(t *testing.T) {
 	}
 }
 
-func TestVotesOnlyLimitedSize(t *testing.T) {
+func TestVotesHashOnlyLimitedSize(t *testing.T) {
 	f := func(vs *Votes) bool {
 		return len(vs.Hash()) == sha256.Size
 	}
