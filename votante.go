@@ -3,8 +3,10 @@ package main
 import (
 	"bytes"
 	"crypto/sha256"
-	"encoding/binary"
 	"fmt"
+	uuid "github.com/satori/go.uuid"
+	"math/rand"
+	"reflect"
 )
 
 type Hasher interface {
@@ -12,19 +14,24 @@ type Hasher interface {
 }
 
 type Device struct {
-	Id uint64
+	Id uuid.UUID
+}
+
+func (d *Device) Generate(rand *rand.Rand, size int) reflect.Value {
+	d = &Device{Id: uuid.NewV4()}
+
+	return reflect.ValueOf(d)
 }
 
 func (d *Device) Hash() []byte {
-	idBinary := make([]byte, 32)
-	binary.PutUvarint(idBinary, d.Id)
-
-	return DoubleSha256(idBinary)
+	return DoubleSha256([]byte(d.Id.String()))
 }
 
 type Block struct {
-	Miner Device
-	Votes *Votes
+	Miner   *Device
+	Votes   *Votes
+	Counter int32
+	Nonce   int64
 }
 
 func (b *Block) Hash() []byte {

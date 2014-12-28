@@ -3,6 +3,7 @@ package main
 import (
 	"bytes"
 	"crypto/sha256"
+	"github.com/satori/go.uuid"
 	"testing"
 	"testing/quick"
 )
@@ -27,7 +28,7 @@ func TestBlockHashChanges(t *testing.T) {
 		oldhash := b.Hash()
 
 		// change the miner id
-		b.Miner.Id++
+		b.Miner.Id = uuid.NewV4()
 
 		newhash := b.Hash()
 
