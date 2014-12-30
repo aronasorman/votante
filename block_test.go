@@ -60,6 +60,8 @@ func TestBlockHashChanges(t *testing.T) {
 }
 
 func TestMinedBlockHasCorrectHash(t *testing.T) {
+	// if this takes more than half a second, change this uuid to
+	// something that will make the test run faster
 	minerID, err := uuid.FromString("edc39bcc-166d-442b-8dbe-7b47facd1158")
 	if err != nil {
 		panic(err)

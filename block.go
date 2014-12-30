@@ -4,7 +4,10 @@ import (
 	"bytes"
 	"errors"
 	"math"
+	"math/rand"
+	"reflect"
 	"strconv"
+	"testing/quick"
 )
 
 type Block struct {
@@ -13,6 +16,27 @@ type Block struct {
 	Counter    int32
 	Nonce      int64
 	Difficulty int32
+	Previous   *Block
+}
+
+func (b *Block) Generate(r *rand.Rand, size int) reflect.Value {
+	miner, _ := quick.Value(reflect.TypeOf(&Device{}), r)
+	votes, _ := quick.Value(reflect.TypeOf(&Votes{}), r)
+	counter, _ := quick.Value(reflect.TypeOf(int32(0)), r)
+	nonce, _ := quick.Value(reflect.TypeOf(int64(0)), r)
+	difficulty, _ := quick.Value(reflect.TypeOf(int32(0)), r)
+
+	b = &Block{}
+	reflect.ValueOf(&b.Miner).Elem().Set(miner)
+	reflect.ValueOf(&b.Votes).Elem().Set(votes)
+	reflect.ValueOf(&b.Counter).Elem().Set(counter)
+	reflect.ValueOf(&b.Nonce).Elem().Set(nonce)
+	reflect.ValueOf(&b.Difficulty).Elem().Set(difficulty)
+
+	// we leave the Previous block as nil
+
+	return reflect.ValueOf(b)
+
 }
 
 func (b *Block) Hash() []byte {
