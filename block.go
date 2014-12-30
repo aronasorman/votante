@@ -33,18 +33,24 @@ func (b *Block) Generate(r *rand.Rand, size int) reflect.Value {
 	reflect.ValueOf(&b.Nonce).Elem().Set(nonce)
 	reflect.ValueOf(&b.Difficulty).Elem().Set(difficulty)
 
-	// we leave the Previous block as nil
+	// we leave the Previous block as nil, so tests will run
+	// faster
 
 	return reflect.ValueOf(b)
 
 }
 
 func (b *Block) Hash() []byte {
+	if b == nil {
+		return nil
+	}
+
 	var totalshasum bytes.Buffer
 	totalshasum.Write(b.Miner.Hash())
 	totalshasum.Write(b.Votes.Hash())
 	totalshasum.Write([]byte(strconv.Itoa(int(b.Nonce))))
 	totalshasum.Write([]byte(strconv.Itoa(int(b.Counter))))
+	totalshasum.Write(b.Previous.Hash())
 
 	return DoubleSha256(totalshasum.Bytes())
 }

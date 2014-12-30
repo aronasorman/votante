@@ -16,6 +16,10 @@ func (v *Vote) Hash() []byte {
 type Votes []Vote
 
 func (vs *Votes) Hash() []byte {
+	if vs == nil {
+		return nil
+	}
+
 	votesarray := []Vote(*vs)
 	var totalshasum bytes.Buffer
 	for _, vote := range votesarray {
