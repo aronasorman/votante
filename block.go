@@ -17,6 +17,7 @@ type Block struct {
 	Nonce      int64
 	Difficulty int32
 	Previous   *Block
+	hash       []byte
 }
 
 func (b *Block) Generate(r *rand.Rand, size int) reflect.Value {
@@ -45,6 +46,10 @@ func (b *Block) Hash() []byte {
 		return nil
 	}
 
+	if b.hash != nil {
+		return b.hash
+	}
+
 	var totalshasum bytes.Buffer
 	totalshasum.Write(b.Miner.Hash())
 	totalshasum.Write(b.Votes.Hash())
@@ -58,6 +63,7 @@ func (b *Block) Hash() []byte {
 func (b *Block) Mine() error {
 	var i int64
 	for ; i <= math.MaxInt32; i++ {
+		b.hash = nil
 		b.Nonce = i
 		if b.Valid() {
 			return nil
