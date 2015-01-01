@@ -11,7 +11,7 @@ import (
 func TestBlockIsHashable(t *testing.T) {
 	// test whether the return value is the right length
 	f := func(b *Block) int {
-		return len(b.Hash())
+		return len(b.ComputeHash())
 	}
 
 	g := func(b *Block) int {
@@ -26,12 +26,12 @@ func TestBlockIsHashable(t *testing.T) {
 func TestBlockHashChanges(t *testing.T) {
 	// test that the hash changes when the miner changes
 	f := func(b *Block) bool {
-		oldhash := b.Hash()
+		oldhash := b.ComputeHash()
 
 		// change the miner id
 		b.Miner.Id = uuid.NewV4()
 
-		newhash := b.Hash()
+		newhash := b.ComputeHash()
 
 		// hashes should be different
 		return bytes.Compare(oldhash, newhash) != 0
@@ -43,12 +43,12 @@ func TestBlockHashChanges(t *testing.T) {
 
 	// test that the hash changes when the nonce changes
 	f = func(b *Block) bool {
-		oldhash := b.Hash()
+		oldhash := b.ComputeHash()
 
 		// change the nonce
 		b.Nonce++
 
-		newhash := b.Hash()
+		newhash := b.ComputeHash()
 
 		// hashes should be different
 		return bytes.Compare(oldhash, newhash) != 0

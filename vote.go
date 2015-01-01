@@ -8,14 +8,14 @@ type Vote struct {
 	For string
 }
 
-func (v *Vote) Hash() []byte {
+func (v *Vote) ComputeHash() []byte {
 	forb := []byte(v.For)
 	return DoubleSha256(forb)
 }
 
 type Votes []Vote
 
-func (vs *Votes) Hash() []byte {
+func (vs *Votes) ComputeHash() []byte {
 	if vs == nil {
 		return nil
 	}
@@ -23,7 +23,7 @@ func (vs *Votes) Hash() []byte {
 	votesarray := []Vote(*vs)
 	var totalshasum bytes.Buffer
 	for _, vote := range votesarray {
-		votesha := vote.Hash()
+		votesha := vote.ComputeHash()
 		totalshasum.Write(votesha)
 	}
 

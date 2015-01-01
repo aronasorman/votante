@@ -41,7 +41,7 @@ func (b *Block) Generate(r *rand.Rand, size int) reflect.Value {
 
 }
 
-func (b *Block) Hash() []byte {
+func (b *Block) ComputeHash() []byte {
 	if b == nil {
 		return nil
 	}
@@ -51,11 +51,11 @@ func (b *Block) Hash() []byte {
 	}
 
 	var totalshasum bytes.Buffer
-	totalshasum.Write(b.Miner.Hash())
-	totalshasum.Write(b.Votes.Hash())
+	totalshasum.Write(b.Miner.ComputeHash())
+	totalshasum.Write(b.Votes.ComputeHash())
 	totalshasum.Write([]byte(strconv.Itoa(int(b.Nonce))))
 	totalshasum.Write([]byte(strconv.Itoa(int(b.Counter))))
-	totalshasum.Write(b.Previous.Hash())
+	totalshasum.Write(b.Previous.ComputeHash())
 
 	return DoubleSha256(totalshasum.Bytes())
 }
@@ -74,7 +74,7 @@ func (b *Block) Mine() error {
 }
 
 func (b *Block) Valid() bool {
-	for i, byte := range b.Hash() {
+	for i, byte := range b.ComputeHash() {
 		if int32(i) > b.Difficulty {
 			return true
 		} else if byte != 0 {

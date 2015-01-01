@@ -16,6 +16,6 @@ func (d *Device) Generate(rand *rand.Rand, size int) reflect.Value {
 	return reflect.ValueOf(d)
 }
 
-func (d *Device) Hash() []byte {
+func (d *Device) ComputeHash() []byte {
 	return DoubleSha256([]byte(d.Id.String()))
 }

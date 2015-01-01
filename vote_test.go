@@ -15,7 +15,7 @@ func TestVoteIsHashable(t *testing.T) {
 	}
 
 	g := func(v *Vote) []byte {
-		return v.Hash()
+		return v.ComputeHash()
 	}
 
 	if err := quick.CheckEqual(f, g, nil); err != nil {
@@ -30,12 +30,12 @@ func TestVotesHashChangeWhenSingleVoteChanges(t *testing.T) {
 		Vote{For: "person2"},
 	}
 
-	oldhash := testvotes.Hash()
+	oldhash := testvotes.ComputeHash()
 
 	// change the hash of one vote
 	testvotes[0].For = "Person 1 modified"
 
-	newhash := testvotes.Hash()
+	newhash := testvotes.ComputeHash()
 
 	if bytes.Compare(oldhash, newhash) == 0 {
 		t.Errorf("Votes hash still the same!")
@@ -44,7 +44,7 @@ func TestVotesHashChangeWhenSingleVoteChanges(t *testing.T) {
 
 func TestVotesHashOnlyLimitedSize(t *testing.T) {
 	f := func(vs *Votes) bool {
-		return len(vs.Hash()) == sha256.Size
+		return len(vs.ComputeHash()) == sha256.Size
 	}
 
 	if err := quick.Check(f, nil); err != nil {
